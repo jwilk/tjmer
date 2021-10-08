@@ -1,0 +1,78 @@
+#!/usr/bin/env python3
+# encoding=UTF-8
+
+# Copyright © 2019-2021 Jakub Wilk <jwilk@jwilk.net>
+# SPDX-License-Identifier: MIT
+
+import argparse
+import os
+import re
+import sys
+import time
+
+0_0  # Python >= 3.6 is required
+
+def parse_time(s):
+    item_re = '[0-9]+[smhd]'
+    if not re.fullmatch(f'({item_re})+', s):
+        raise ValueError
+    dt = 0
+    for item in re.findall(item_re, s):
+        n = int(item[:-1])
+        unit = item[-1]
+        dt += n * dict(
+            d = 24 * 60 * 60,
+            h =      60 * 60,
+            m =           60,
+            s =            1,
+        )[unit]
+    return dt
+parse_time.__name__ = 'time'
+
+def get_time():
+    return time.clock_gettime(time.CLOCK_MONOTONIC)
+
+def fmt_time(t):
+    t = round(t)
+    m, s = divmod(t, 60)
+    h, m = divmod(m, 60)
+    d, h = divmod(h, 24)
+    r = ''
+    if d:
+        r += f'{d}d'
+    if h:
+        r += f'{h}h'
+    if m:
+        r += f'{m}m'
+    if s or (t == 0):
+        r += f'{s}s'
+    return r
+
+def wait(timeout, kwd='ETA'):
+    tm_start = get_time()
+    tm_end = tm_start + timeout
+    while True:
+        tm = get_time()
+        if tm > tm_end:
+            break
+        tm_rem = tm_end - tm
+        print('\r\033[2K', fmt_time(tm_rem), sep='', end='', file=sys.stderr, flush=True)
+        tm_sleep = tm_rem % 1
+        if tm_sleep == 0:
+            tm_sleep = 1
+        time.sleep(tm_sleep)
+
+def execvp(*cmdline):
+    os.execvp(cmdline[0], cmdline)
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument('timeout', metavar='TIME', type=parse_time)
+    opts = ap.parse_args()
+    wait(opts.timeout)
+    print('\a')
+
+if __name__ == '__main__':
+    main()
+
+# vim:ts=4 sts=4 sw=4 et

@@ -61,6 +61,7 @@ def wait(timeout, kwd='ETA'):
         if tm_sleep == 0:
             tm_sleep = 1
         time.sleep(tm_sleep)
+    print('\r\033[2K', end='', file=sys.stderr, flush=True)
 
 def execvp(*cmdline):
     os.execvp(cmdline[0], cmdline)

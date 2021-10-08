@@ -49,6 +49,8 @@ def fmt_time(t):
     return r
 
 def wait(timeout, kwd='ETA'):
+    def eprint(*args, **kwargs):
+        print(*args, **kwargs, end='', file=sys.stderr, flush=True)
     tm_start = get_time()
     tm_end = tm_start + timeout
     while True:
@@ -56,12 +58,12 @@ def wait(timeout, kwd='ETA'):
         if tm > tm_end:
             break
         tm_rem = tm_end - tm
-        print('\r\033[2K', fmt_time(tm_rem), sep='', end='', file=sys.stderr, flush=True)
+        eprint('\r\033[2K', fmt_time(tm_rem), sep='')
         tm_sleep = tm_rem % 1
         if tm_sleep == 0:
             tm_sleep = 1
         time.sleep(tm_sleep)
-    print('\r\033[2K', end='', file=sys.stderr, flush=True)
+    eprint('\r\033[2K')
 
 def execvp(*cmdline):
     os.execvp(cmdline[0], cmdline)

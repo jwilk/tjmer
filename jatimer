@@ -48,7 +48,7 @@ def fmt_time(t):
         r += f'{s}s'
     return r
 
-def wait(timeout, kwd='ETA'):
+def wait(timeout):
     def eprint(*args, **kwargs):
         print(*args, **kwargs, end='', file=sys.stderr, flush=True)
     tm_start = get_time()

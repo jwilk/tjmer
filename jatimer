@@ -54,10 +54,9 @@ def wait(timeout):
     tm_start = get_time()
     tm_end = tm_start + timeout
     while True:
-        tm = get_time()
-        if tm > tm_end:
+        tm_rem = tm_end - get_time()
+        if tm_rem < 0:
             break
-        tm_rem = tm_end - tm
         eprint('\r\033[2K', fmt_time(tm_rem), sep='')
         tm_sleep = tm_rem % 1
         if tm_sleep == 0:

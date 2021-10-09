@@ -7,6 +7,7 @@
 import argparse
 import os
 import re
+import signal
 import sys
 import time
 
@@ -71,6 +72,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('timeout', metavar='TIME', type=parse_time)
     opts = ap.parse_args()
+    signal.signal(signal.SIGINT, signal.SIG_DFL)
     wait(opts.timeout)
     print('\a')
 

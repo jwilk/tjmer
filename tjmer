@@ -76,8 +76,10 @@ def main():
     opts = ap.parse_args()
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     wait(opts.timeout)
-    cmd = []
-    if opts.cmd is not None:
+    if opts.cmd is None:
+        cmd = os.getenv('TJMER_COMMAND') or ''
+        cmd = ['sh', '-c', cmd]
+    else:
         cmd = [opts.cmd, *opts.args]
     if not cmd:
         print('\a')

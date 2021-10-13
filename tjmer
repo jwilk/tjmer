@@ -71,10 +71,23 @@ def execvp(*cmdline):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('timeout', metavar='TIME', type=parse_time)
+    ap.add_argument('cmd', metavar='COMMAND', nargs='?')
+    ap.add_argument('args', metavar='ARGS', nargs=argparse.REMAINDER, help=argparse.SUPPRESS)
     opts = ap.parse_args()
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     wait(opts.timeout)
-    print('\a')
+    cmd = []
+    if opts.cmd is not None:
+        cmd = [opts.cmd, *opts.args]
+    if not cmd:
+        print('\a')
+        return
+    try:
+        os.execvp(cmd[0], cmd)
+    except FileNotFoundError as exc:
+        if exc.filename is None:
+            exc.filename = cmd[0]
+        raise
 
 if __name__ == '__main__':
     main()

@@ -1,0 +1,41 @@
+name: CI
+on:
+- push
+- pull_request
+jobs:
+  main:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        python:
+        - '3.6'
+        - '3.7'
+        - '3.8'
+        - '3.9'
+        - '3.10'
+        - '3.11-dev'
+    steps:
+    - uses: actions/checkout@v2
+    - name: set up Python ${{matrix.python}}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{matrix.python}}
+    - name: run pydiatra
+      run: |
+        python3 -m pip install pydiatra
+        python3 -m pydiatra tjmer
+    - name: run pyflakes
+      run: |
+        python3 -m pip install pyflakes
+        python3 -m pyflakes tjmer
+    - name: run pylint
+      run: |
+        python3 -m pip install pylint
+        python3 -m pylint tjmer
+    - name: smoke test
+      run: |
+        ./tjmer --help
+        ./tjmer 1s
+
+# vim:ts=2 sts=2 sw=2 et
+

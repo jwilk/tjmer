@@ -1,0 +1,13 @@
+.. code:: console
+
+   $ tjmer 4m23s
+   4m23s
+   4m22s
+   4m21s
+   ⋮
+   3s
+   2s
+   1s
+   🕭
+
+.. vim:ft=rst ts=3 sts=3 sw=3 et

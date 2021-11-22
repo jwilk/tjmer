@@ -74,11 +74,15 @@ def parse_time_delta(s):
         )[unit]
     return MonotonicTimer(dt)
 
+def xdivmod(n, *ds):
+    for d in ds:
+        n, r = divmod(n, d)
+        yield r
+    yield n
+
 def fmt_time(t):
     t = round(t)
-    m, s = divmod(t, 60)
-    h, m = divmod(m, 60)
-    d, h = divmod(h, 24)
+    [s, m, h, d] = xdivmod(t, 60, 60, 24)
     r = ''
     if d:
         r += f'{d}d'

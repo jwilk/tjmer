@@ -5,6 +5,7 @@
 # SPDX-License-Identifier: MIT
 
 import argparse
+import datetime
 import os
 import re
 import signal
@@ -26,7 +27,38 @@ class MonotonicTimer():
     def __float__(self):
         return self._end - self._now()
 
+class UnixTimer():
+
+    def __init__(self, ts):
+        self._end = ts
+
+    def __float__(self):
+        return self._end - time.time()
+
 def parse_time(s):
+    if s[:1] == '@':
+        return parse_hms_time(s)
+    return parse_time_delta(s)
+parse_time.__name__ = 'time'
+
+def parse_hms_time(s):
+    for fmt in ('%H:%M', '%H:%M:%S'):
+        try:
+            tm = datetime.datetime.strptime(s, '@' + fmt).time()
+        except ValueError:
+            continue
+        else:
+            break
+    else:
+        raise ValueError
+    now = datetime.datetime.now()
+    dt = now.combine(now.date(), tm)
+    ts = dt.timestamp()
+    if ts <= now.timestamp():
+        ts += datetime.timedelta(days=1).total_seconds()
+    return UnixTimer(ts)
+
+def parse_time_delta(s):
     item_re = '[0-9]+[smhd]'
     if not re.fullmatch(f'({item_re})+', s):
         raise ValueError
@@ -41,7 +73,6 @@ def parse_time(s):
             s =            1,
         )[unit]
     return MonotonicTimer(dt)
-parse_time.__name__ = 'time'
 
 def fmt_time(t):
     t = round(t)

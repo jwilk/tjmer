@@ -36,5 +36,6 @@ jobs:
       run: |
         ./tjmer --help
         ./tjmer 1s
+        ./tjmer $(date +@%H:%M:%S -d '+1sec')
 
 # vim:ts=2 sts=2 sw=2 et

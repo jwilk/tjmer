@@ -13,6 +13,19 @@ import time
 
 int(0_0)  # Python >= 3.6 is required
 
+class MonotonicTimer():
+
+    @staticmethod
+    def _now():
+        return time.clock_gettime(time.CLOCK_MONOTONIC)
+
+    def __init__(self, timeout):
+        start = self._now()
+        self._end = start + timeout
+
+    def __float__(self):
+        return self._end - self._now()
+
 def parse_time(s):
     item_re = '[0-9]+[smhd]'
     if not re.fullmatch(f'({item_re})+', s):
@@ -27,11 +40,8 @@ def parse_time(s):
             m =           60,
             s =            1,
         )[unit]
-    return dt
+    return MonotonicTimer(dt)
 parse_time.__name__ = 'time'
-
-def get_time():
-    return time.clock_gettime(time.CLOCK_MONOTONIC)
 
 def fmt_time(t):
     t = round(t)
@@ -49,13 +59,11 @@ def fmt_time(t):
         r += f'{s}s'
     return r
 
-def wait(timeout):
+def wait(timer):
     def eprint(*args, **kwargs):
         print(*args, **kwargs, end='', file=sys.stderr, flush=True)
-    tm_start = get_time()
-    tm_end = tm_start + timeout
     while True:
-        tm_rem = tm_end - get_time()
+        tm_rem = float(timer)
         if tm_rem <= 0:
             break
         eprint('\r\033[2K', fmt_time(tm_rem), sep='')

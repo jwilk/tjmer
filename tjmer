@@ -8,6 +8,7 @@ import argparse
 import datetime
 import os
 import re
+import shutil
 import signal
 import sys
 import textwrap
@@ -133,12 +134,22 @@ def main():
     ap.add_argument('args', metavar='ARGS', nargs=argparse.REMAINDER, help=argparse.SUPPRESS)
     opts = ap.parse_args()
     signal.signal(signal.SIGINT, signal.SIG_DFL)
-    wait(opts.timeout)
     if opts.cmd is None:
         cmd = os.getenv('TJMER_COMMAND') or ''
         cmd = ['sh', '-c', cmd]
     else:
         cmd = [opts.cmd, *opts.args]
+    if cmd and not shutil.which(cmd[0]):
+        prog = ap.prog
+        if '/' in cmd[0]:
+            try:
+                os.stat(cmd[0])
+            except OSError as exc:
+                print(f'{prog}: {cmd[0]}: {exc.strerror}', file=sys.stderr)
+                sys.exit(1)
+        print(f'{prog}: {cmd[0]}: command not found', file=sys.stderr)
+        sys.exit(1)
+    wait(opts.timeout)
     if not cmd:
         print('\a')
         return

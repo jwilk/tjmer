@@ -10,6 +10,7 @@ import os
 import re
 import signal
 import sys
+import textwrap
 import time
 
 int(0_0)  # Python >= 3.6 is required
@@ -112,9 +113,23 @@ def execvp(*cmdline):
     os.execvp(cmdline[0], cmdline)
 
 def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument('timeout', metavar='TIME', type=parse_time)
-    ap.add_argument('cmd', metavar='COMMAND', nargs='?')
+    ap = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
+    ap.add_argument('timeout', metavar='TIME', type=parse_time,
+        help=textwrap.dedent('''
+        how long to wait:
+          Nd = N days
+          Nh = N hours
+          Nm = N minutes
+          Ns = N seconds
+        or concatenation of any of the above;
+        or until when to wait:
+          @HH:MM
+          @HH:MM:SS
+        ''').lstrip()
+    )
+    ap.add_argument('cmd', metavar='COMMAND', nargs='?',
+        help='command to execute instead of printing BEL'
+    )
     ap.add_argument('args', metavar='ARGS', nargs=argparse.REMAINDER, help=argparse.SUPPRESS)
     opts = ap.parse_args()
     signal.signal(signal.SIGINT, signal.SIG_DFL)

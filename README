@@ -14,8 +14,16 @@
    usage: tjmer [-h] TIME [COMMAND]
 
    positional arguments:
-     TIME
-     COMMAND
+     TIME        how long to wait:
+                   Nd = N days
+                   Nh = N hours
+                   Nm = N minutes
+                   Ns = N seconds
+                 or concatenation of any of the above;
+                 or until when to wait:
+                   @HH:MM
+                   @HH:MM:SS
+     COMMAND     command to execute instead of printing BEL
 
    optional arguments:
      -h, --help  show this help message and exit

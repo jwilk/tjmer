@@ -25,7 +25,7 @@ jobs:
     - name: run pydiatra
       run: |
         python3 -m pip install pydiatra
-        python3 -m pydiatra tjmer
+        python3 -m pydiatra -v tjmer
     - name: run pyflakes
       run: |
         python3 -m pip install pyflakes

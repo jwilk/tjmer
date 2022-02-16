@@ -37,7 +37,7 @@ jobs:
       run: |
         ./tjmer --help
         ./tjmer 1s
-        ./tjmer $(date +@%H:%M:%S -d '+1sec')
+        ./tjmer $(date +@%H:%M:%S -d '+2sec')
       timeout-minutes: 1
     - name: check README syntax
       run: |

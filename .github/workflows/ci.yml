@@ -38,6 +38,7 @@ jobs:
         ./tjmer --help
         ./tjmer 1s
         ./tjmer $(date +@%H:%M:%S -d '+1sec')
+      timeout-minutes: 1
     - name: check README syntax
       run: |
         python3 -m pip install restructuredtext-lint pygments

@@ -135,8 +135,11 @@ def main():
     opts = ap.parse_args()
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     if opts.cmd is None:
-        cmd = os.getenv('TJMER_COMMAND') or ''
-        cmd = ['sh', '-c', cmd]
+        if opts.args:
+            cmd = opts.args
+        else:
+            cmd = os.getenv('TJMER_COMMAND') or ''
+            cmd = ['sh', '-c', cmd]
     else:
         cmd = [opts.cmd, *opts.args]
     if cmd and not shutil.which(cmd[0]):

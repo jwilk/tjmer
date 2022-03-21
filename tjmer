@@ -139,7 +139,8 @@ def main():
             cmd = opts.args
         else:
             cmd = os.getenv('TJMER_COMMAND') or ''
-            cmd = ['sh', '-c', cmd]
+            if cmd:
+                cmd = ['sh', '-c', cmd]
     else:
         cmd = [opts.cmd, *opts.args]
     if cmd and not shutil.which(cmd[0]):

@@ -115,6 +115,9 @@ def execvp(*cmdline):
 
 def main():
     ap = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
+    if sys.version_info < (3, 10):
+        # https://bugs.python.org/issue9694
+        ap._optionals.title = 'options'  # pylint: disable=protected-access
     ap.add_argument('timeout', metavar='TIME', type=parse_time,
         help=textwrap.dedent('''
         how long to wait:

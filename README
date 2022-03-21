@@ -25,7 +25,7 @@
                    @HH:MM:SS
      COMMAND     command to execute instead of printing BEL
 
-   optional arguments:
+   options:
      -h, --help  show this help message and exit
 
 .. vim:ft=rst ts=3 sts=3 sw=3 et

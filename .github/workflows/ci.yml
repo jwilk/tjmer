@@ -33,11 +33,9 @@ jobs:
         python3 -m pip install pylint
         python3 -m pylint tjmer
       if: matrix.python != '3.11-dev'
-    - name: smoke test
+    - name: run tests
       run: |
-        ./tjmer --help
-        ./tjmer 1s
-        ./tjmer $(date +@%H:%M:%S -d '+2sec')
+        prove -v
       timeout-minutes: 1
     - name: check README syntax
       run: |

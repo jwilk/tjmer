@@ -16,7 +16,7 @@ import time
 
 int(0_0)  # Python >= 3.6 is required
 
-class MonotonicTimer():
+class MonotonicTimer:
 
     @staticmethod
     def _now():
@@ -29,7 +29,7 @@ class MonotonicTimer():
     def __float__(self):
         return self._end - self._now()
 
-class UnixTimer():
+class UnixTimer:
 
     def __init__(self, ts):
         self._end = ts

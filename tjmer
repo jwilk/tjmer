@@ -83,6 +83,8 @@ def xdivmod(n, *ds):
     yield n
 
 def fmt_time(t):
+    # work-around for <https://github.com/pylint-dev/pylint/issues/10080>:
+    # pylint: disable=using-constant-test
     t = round(t)
     [s, m, h, d] = xdivmod(t, 60, 60, 24)
     r = ''

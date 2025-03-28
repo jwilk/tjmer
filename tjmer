@@ -143,7 +143,7 @@ def main():
         if opts.args:
             cmd = opts.args
         else:
-            cmd = os.getenv('TJMER_COMMAND') or ''
+            cmd = os.getenv('TJMER_COMMAND')
             if cmd:
                 cmd = ['sh', '-c', cmd]
     else:

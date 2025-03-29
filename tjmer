@@ -158,6 +158,9 @@ def main():
                 sys.exit(1)
         print(f'{prog}: {cmd[0]}: command not found', file=sys.stderr)
         sys.exit(1)
+    init_cmd = os.getenv('TJMER_INIT_COMMAND')
+    if init_cmd:
+        os.system(init_cmd)
     wait(opts.timeout)
     if not cmd:
         print('\a')
